@@ -128,6 +128,36 @@ export type Database = {
         }
         Relationships: []
       }
+      short_links: {
+        Row: {
+          click_count: number
+          created_at: string
+          id: string
+          is_active: boolean
+          slug: string
+          target_url: string
+          updated_at: string
+        }
+        Insert: {
+          click_count?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          slug: string
+          target_url: string
+          updated_at?: string
+        }
+        Update: {
+          click_count?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          slug?: string
+          target_url?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_content: {
         Row: {
           category: string
