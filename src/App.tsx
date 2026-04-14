@@ -17,6 +17,8 @@ const AdminProfile = lazy(() => import("./pages/AdminProfile"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const Article = lazy(() => import("./pages/Article"));
+const AdminShortLinks = lazy(() => import("./pages/AdminShortLinks"));
+const ShortLinkRedirect = lazy(() => import("./pages/ShortLinkRedirect"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,6 +52,8 @@ const App = () => (
             <Route path="/admin/articles" element={<AdminArticles />} />
             <Route path="/admin/site-info" element={<AdminSiteInfo />} />
             <Route path="/admin/quick-links" element={<AdminQuickLinks />} />
+            <Route path="/admin/short-links" element={<AdminShortLinks />} />
+            <Route path="/sl/:slug" element={<ShortLinkRedirect />} />
             <Route path="/admin/profile" element={<AdminProfile />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />

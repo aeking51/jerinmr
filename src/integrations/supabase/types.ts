@@ -285,6 +285,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_short_link_clicks: {
+        Args: { _slug: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"

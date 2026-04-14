@@ -140,6 +140,7 @@ const AdminProfile = () => {
             <Button onClick={() => navigate('/admin/articles')} variant="outline" size="sm">Articles</Button>
             <Button onClick={() => navigate('/admin/quick-links')} variant="outline" size="sm">Quick Links</Button>
             <Button onClick={() => navigate('/admin/site-info')} variant="outline" size="sm">Site Info</Button>
+            <Button onClick={() => navigate('/admin/short-links')} variant="outline" size="sm">Short Links</Button>
             <Button onClick={handleLogout} variant="outline" size="sm" className="gap-2">
               <LogOut className="h-4 w-4" /> Logout
             </Button>

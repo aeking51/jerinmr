@@ -284,6 +284,9 @@ const AdminQuickLinks = () => {
             <Button onClick={() => navigate('/admin/profile')} variant="outline" size="sm">
               Profile
             </Button>
+            <Button onClick={() => navigate('/admin/short-links')} variant="outline" size="sm">
+              Short Links
+            </Button>
             <Button onClick={handleLogout} variant="outline" size="sm" className="gap-2">
               <LogOut className="h-4 w-4" />
               Logout
