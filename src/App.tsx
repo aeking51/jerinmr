@@ -17,6 +17,8 @@ const AdminProfile = lazy(() => import("./pages/AdminProfile"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const Article = lazy(() => import("./pages/Article"));
+const AdminShortLinks = lazy(() => import("./pages/AdminShortLinks"));
+const ShortLinkRedirect = lazy(() => import("./pages/ShortLinkRedirect"));
 
 const queryClient = new QueryClient({
   defaultOptions: {

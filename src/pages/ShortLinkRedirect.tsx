@@ -23,10 +23,8 @@ const ShortLinkRedirect = () => {
         return;
       }
 
-      // Increment click count via a separate update (will fail silently for anon, that's ok)
-      supabase.from('short_links').update({ click_count: 0 }).eq('id', data.id).then(() => {
-        // We can't increment via supabase-js easily without RPC, so we skip for now
-      });
+      // Increment click count via RPC
+      supabase.rpc('increment_short_link_clicks', { _slug: slug });
 
       window.location.href = data.target_url;
     };
