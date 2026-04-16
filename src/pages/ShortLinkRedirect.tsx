@@ -1,19 +1,28 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Lock } from 'lucide-react';
 
 const ShortLinkRedirect = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const [error, setError] = useState(false);
+  const [needsPassword, setNeedsPassword] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [linkData, setLinkData] = useState<{ target_url: string; password: string | null } | null>(null);
 
   useEffect(() => {
-    const redirect = async () => {
+    document.title = 'Redirecting… | Short Link';
+
+    const fetchLink = async () => {
       if (!slug) { setError(true); return; }
 
       const { data, error: fetchError } = await supabase
         .from('short_links')
-        .select('id, target_url')
+        .select('target_url, password')
         .eq('slug', slug)
         .eq('is_active', true)
         .maybeSingle();
@@ -23,14 +32,30 @@ const ShortLinkRedirect = () => {
         return;
       }
 
-      // Increment click count via RPC
-      supabase.rpc('increment_short_link_clicks', { _slug: slug });
-
-      window.location.href = data.target_url;
+      if (data.password) {
+        setNeedsPassword(true);
+        setLinkData(data);
+      } else {
+        supabase.rpc('increment_short_link_clicks', { _slug: slug });
+        window.location.href = data.target_url;
+      }
     };
 
-    redirect();
+    fetchLink();
   }, [slug]);
+
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!linkData) return;
+
+    if (passwordInput === linkData.password) {
+      supabase.rpc('increment_short_link_clicks', { _slug: slug! });
+      window.location.href = linkData.target_url;
+    } else {
+      setPasswordError('Incorrect password. Please try again.');
+      setPasswordInput('');
+    }
+  };
 
   if (error) {
     return (
@@ -39,6 +64,34 @@ const ShortLinkRedirect = () => {
           <h1 className="text-2xl font-bold text-foreground">Link Not Found</h1>
           <p className="text-muted-foreground">This short link doesn't exist or has been deactivated.</p>
           <button onClick={() => navigate('/')} className="text-primary underline">Go to homepage</button>
+        </div>
+      </div>
+    );
+  }
+
+  if (needsPassword) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="w-full max-w-sm border rounded-lg p-6 space-y-4 bg-card shadow-lg">
+          <div className="text-center space-y-2">
+            <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+              <Lock className="h-6 w-6 text-primary" />
+            </div>
+            <h1 className="text-xl font-bold text-foreground">Protected Link</h1>
+            <p className="text-sm text-muted-foreground">This link is password protected. Enter the password to continue.</p>
+          </div>
+          <form onSubmit={handlePasswordSubmit} className="space-y-3">
+            <Input
+              type="password"
+              value={passwordInput}
+              onChange={(e) => { setPasswordInput(e.target.value); setPasswordError(''); }}
+              placeholder="Enter password"
+              autoFocus
+              required
+            />
+            {passwordError && <p className="text-sm text-destructive">{passwordError}</p>}
+            <Button type="submit" className="w-full">Unlock & Redirect</Button>
+          </form>
         </div>
       </div>
     );

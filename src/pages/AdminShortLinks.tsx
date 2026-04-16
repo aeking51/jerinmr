@@ -15,6 +15,7 @@ interface ShortLink {
   target_url: string;
   click_count: number;
   is_active: boolean;
+  password: string | null;
   created_at: string;
   updated_at: string;
 }
