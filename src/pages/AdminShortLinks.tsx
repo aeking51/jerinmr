@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { Link2, Plus, Edit, Trash2, Eye, EyeOff, LogOut, Copy, ExternalLink, MousePointerClick } from 'lucide-react';
+import { Link2, Plus, Edit, Trash2, Eye, EyeOff, LogOut, Copy, ExternalLink, MousePointerClick, Lock } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
@@ -32,7 +32,8 @@ const AdminShortLinks = () => {
   const [formData, setFormData] = useState({
     slug: '',
     target_url: '',
-    is_active: true
+    is_active: true,
+    password: ''
   });
 
   useEffect(() => {
