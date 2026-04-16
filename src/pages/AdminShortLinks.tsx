@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { Link2, Plus, Edit, Trash2, Eye, EyeOff, LogOut, Copy, ExternalLink, MousePointerClick } from 'lucide-react';
+import { Link2, Plus, Edit, Trash2, Eye, EyeOff, LogOut, Copy, ExternalLink, MousePointerClick, Lock } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
@@ -15,6 +15,7 @@ interface ShortLink {
   target_url: string;
   click_count: number;
   is_active: boolean;
+  password: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -31,7 +32,8 @@ const AdminShortLinks = () => {
   const [formData, setFormData] = useState({
     slug: '',
     target_url: '',
-    is_active: true
+    is_active: true,
+    password: ''
   });
 
   useEffect(() => {
@@ -91,14 +93,14 @@ const AdminShortLinks = () => {
       if (editingLink) {
         const { error } = await supabase
           .from('short_links')
-          .update({ slug: formData.slug, target_url: formData.target_url, is_active: formData.is_active })
+          .update({ slug: formData.slug, target_url: formData.target_url, is_active: formData.is_active, password: formData.password || null })
           .eq('id', editingLink.id);
         if (error) throw error;
         toast({ title: "Short link updated successfully" });
       } else {
         const { error } = await supabase
           .from('short_links')
-          .insert([{ slug: formData.slug, target_url: formData.target_url, is_active: formData.is_active }]);
+          .insert([{ slug: formData.slug, target_url: formData.target_url, is_active: formData.is_active, password: formData.password || null }]);
         if (error) throw error;
         toast({ title: "Short link created successfully" });
       }
@@ -143,13 +145,13 @@ const AdminShortLinks = () => {
 
   const openEditDialog = (link: ShortLink) => {
     setEditingLink(link);
-    setFormData({ slug: link.slug, target_url: link.target_url, is_active: link.is_active });
+    setFormData({ slug: link.slug, target_url: link.target_url, is_active: link.is_active, password: link.password || '' });
     setIsDialogOpen(true);
   };
 
   const resetForm = () => {
     setEditingLink(null);
-    setFormData({ slug: '', target_url: '', is_active: true });
+    setFormData({ slug: '', target_url: '', is_active: true, password: '' });
   };
 
   const handleLogout = async () => {
@@ -241,6 +243,16 @@ const AdminShortLinks = () => {
                         required
                       />
                     </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="password">Password (optional)</Label>
+                      <Input
+                        id="password"
+                        type="text"
+                        value={formData.password}
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        placeholder="Leave empty for no password"
+                      />
+                    </div>
                     <div className="flex items-center gap-2">
                       <input
                         type="checkbox"
@@ -273,6 +285,11 @@ const AdminShortLinks = () => {
                       <span className="text-xs text-muted-foreground flex items-center gap-1">
                         <MousePointerClick className="h-3 w-3" />{link.click_count} clicks
                       </span>
+                      {link.password && (
+                        <span className="text-xs text-muted-foreground flex items-center gap-1">
+                          <Lock className="h-3 w-3" /> Protected
+                        </span>
+                      )}
                     </div>
                     <p className="text-sm text-muted-foreground truncate max-w-md">{link.target_url}</p>
                   </div>

@@ -1,0 +1,1 @@
+ALTER TABLE public.short_links ADD COLUMN password text DEFAULT NULL;
