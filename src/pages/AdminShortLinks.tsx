@@ -243,6 +243,16 @@ const AdminShortLinks = () => {
                         required
                       />
                     </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="password">Password (optional)</Label>
+                      <Input
+                        id="password"
+                        type="text"
+                        value={formData.password}
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        placeholder="Leave empty for no password"
+                      />
+                    </div>
                     <div className="flex items-center gap-2">
                       <input
                         type="checkbox"
@@ -275,6 +285,11 @@ const AdminShortLinks = () => {
                       <span className="text-xs text-muted-foreground flex items-center gap-1">
                         <MousePointerClick className="h-3 w-3" />{link.click_count} clicks
                       </span>
+                      {link.password && (
+                        <span className="text-xs text-muted-foreground flex items-center gap-1">
+                          <Lock className="h-3 w-3" /> Protected
+                        </span>
+                      )}
                     </div>
                     <p className="text-sm text-muted-foreground truncate max-w-md">{link.target_url}</p>
                   </div>
