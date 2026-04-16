@@ -12,7 +12,7 @@ const ShortLinkRedirect = () => {
   const [needsPassword, setNeedsPassword] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [linkData, setLinkData] = useState<{ target_url: string; password: string | null } | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     document.title = 'Redirecting… | Short Link';
@@ -20,6 +20,7 @@ const ShortLinkRedirect = () => {
     const fetchLink = async () => {
       if (!slug) { setError(true); return; }
 
+      // Only fetch non-sensitive fields; password is never sent to client
       const { data, error: fetchError } = await supabase
         .from('short_links')
         .select('target_url, password')
@@ -32,9 +33,9 @@ const ShortLinkRedirect = () => {
         return;
       }
 
+      // Check if link has a password (value won't be null if set)
       if (data.password) {
         setNeedsPassword(true);
-        setLinkData(data);
       } else {
         supabase.rpc('increment_short_link_clicks', { _slug: slug });
         window.location.href = data.target_url;
@@ -44,17 +45,27 @@ const ShortLinkRedirect = () => {
     fetchLink();
   }, [slug]);
 
-  const handlePasswordSubmit = (e: React.FormEvent) => {
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!linkData) return;
+    if (!slug) return;
+    setLoading(true);
+    setPasswordError('');
 
-    if (passwordInput === linkData.password) {
-      supabase.rpc('increment_short_link_clicks', { _slug: slug! });
-      window.location.href = linkData.target_url;
-    } else {
+    // Verify password server-side via RPC
+    const { data: targetUrl, error: rpcError } = await supabase.rpc(
+      'verify_short_link_password',
+      { _slug: slug, _password: passwordInput }
+    );
+
+    if (rpcError || !targetUrl) {
       setPasswordError('Incorrect password. Please try again.');
       setPasswordInput('');
+      setLoading(false);
+      return;
     }
+
+    supabase.rpc('increment_short_link_clicks', { _slug: slug });
+    window.location.href = targetUrl;
   };
 
   if (error) {
@@ -88,9 +99,12 @@ const ShortLinkRedirect = () => {
               placeholder="Enter password"
               autoFocus
               required
+              disabled={loading}
             />
             {passwordError && <p className="text-sm text-destructive">{passwordError}</p>}
-            <Button type="submit" className="w-full">Unlock & Redirect</Button>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Verifying...' : 'Unlock & Redirect'}
+            </Button>
           </form>
         </div>
       </div>

@@ -292,6 +292,10 @@ export type Database = {
         Args: { _slug: string }
         Returns: undefined
       }
+      verify_short_link_password: {
+        Args: { _password: string; _slug: string }
+        Returns: string
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
