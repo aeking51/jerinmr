@@ -93,14 +93,14 @@ const AdminShortLinks = () => {
       if (editingLink) {
         const { error } = await supabase
           .from('short_links')
-          .update({ slug: formData.slug, target_url: formData.target_url, is_active: formData.is_active })
+          .update({ slug: formData.slug, target_url: formData.target_url, is_active: formData.is_active, password: formData.password || null })
           .eq('id', editingLink.id);
         if (error) throw error;
         toast({ title: "Short link updated successfully" });
       } else {
         const { error } = await supabase
           .from('short_links')
-          .insert([{ slug: formData.slug, target_url: formData.target_url, is_active: formData.is_active }]);
+          .insert([{ slug: formData.slug, target_url: formData.target_url, is_active: formData.is_active, password: formData.password || null }]);
         if (error) throw error;
         toast({ title: "Short link created successfully" });
       }
@@ -145,13 +145,13 @@ const AdminShortLinks = () => {
 
   const openEditDialog = (link: ShortLink) => {
     setEditingLink(link);
-    setFormData({ slug: link.slug, target_url: link.target_url, is_active: link.is_active });
+    setFormData({ slug: link.slug, target_url: link.target_url, is_active: link.is_active, password: link.password || '' });
     setIsDialogOpen(true);
   };
 
   const resetForm = () => {
     setEditingLink(null);
-    setFormData({ slug: '', target_url: '', is_active: true });
+    setFormData({ slug: '', target_url: '', is_active: true, password: '' });
   };
 
   const handleLogout = async () => {
