@@ -144,10 +144,10 @@ export const UtilityToolsSection = memo(function UtilityToolsSection() {
     }
   };
 
-  const copyToClipboard = (text: string) => {
+  const copyToClipboard = useCallback((text: string) => {
     navigator.clipboard.writeText(text);
     toast.success('Copied to clipboard!');
-  };
+  }, []);
 
   const handleWebsiteCheck = async () => {
     if (!websiteUrl.trim()) {
@@ -440,9 +440,9 @@ export const UtilityToolsSection = memo(function UtilityToolsSection() {
     return 'text-orange-500';
   };
 
-  const toggleHeaderSection = (section: string) => {
-    setExpandedHeaderSection(prev => prev === section ? null : section);
-  };
+  const toggleHeaderSection = useCallback((section: string) => {
+    setExpandedHeaderSection((prev) => (prev === section ? null : section));
+  }, []);
 
   return (
     <div className="space-y-6">
