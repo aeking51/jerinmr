@@ -9,7 +9,6 @@ const commands = [
   { id: 'home', command: 'cd ~', mobileCommand: '~', label: 'Home' },
   { id: 'profile', command: 'cat profile/*', mobileCommand: 'profile', label: 'Profile' },
   { id: 'articles', command: 'ls articles/', mobileCommand: 'articles', label: 'Articles' },
-  { id: 'contact', command: 'whois jerinmr', mobileCommand: 'whois', label: 'Contact' },
   { id: 'network', command: 'netstat -a', mobileCommand: 'netstat', label: 'Network Tools' },
   { id: 'utilities', command: 'man utils', mobileCommand: 'utils', label: 'Utilities' },
 ] as const;
