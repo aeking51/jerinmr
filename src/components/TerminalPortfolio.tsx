@@ -87,14 +87,12 @@ export function TerminalPortfolio() {
         return <ProfileSection />;
       case 'profile':
       case 'articles':
-      case 'contact':
       case 'network':
       case 'utilities':
         return (
           <Suspense fallback={<SectionLoader />}>
             {activeSection === 'profile' && <ProfileInfoSection />}
             {activeSection === 'articles' && <ArticlesSection />}
-            {activeSection === 'contact' && <ContactSection />}
             {activeSection === 'network' && <NetworkToolsSection />}
             {activeSection === 'utilities' && <UtilityToolsSection />}
           </Suspense>
