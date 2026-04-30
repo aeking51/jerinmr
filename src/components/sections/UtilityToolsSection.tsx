@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
@@ -63,7 +63,7 @@ interface HeadersInfo {
   error?: string;
 }
 
-export function UtilityToolsSection() {
+export const UtilityToolsSection = memo(function UtilityToolsSection() {
   const [base64Input, setBase64Input] = useState('');
   const [base64Output, setBase64Output] = useState('');
   const [hashInput, setHashInput] = useState('');
@@ -144,10 +144,10 @@ export function UtilityToolsSection() {
     }
   };
 
-  const copyToClipboard = (text: string) => {
+  const copyToClipboard = useCallback((text: string) => {
     navigator.clipboard.writeText(text);
     toast.success('Copied to clipboard!');
-  };
+  }, []);
 
   const handleWebsiteCheck = async () => {
     if (!websiteUrl.trim()) {
@@ -440,9 +440,9 @@ export function UtilityToolsSection() {
     return 'text-orange-500';
   };
 
-  const toggleHeaderSection = (section: string) => {
-    setExpandedHeaderSection(prev => prev === section ? null : section);
-  };
+  const toggleHeaderSection = useCallback((section: string) => {
+    setExpandedHeaderSection((prev) => (prev === section ? null : section));
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -1123,4 +1123,4 @@ export function UtilityToolsSection() {
       </Tabs>
     </div>
   );
-}
+});

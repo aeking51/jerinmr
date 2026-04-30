@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Activity, Globe, Search, Loader2, Trash2, Copy, Info } from 'lucide-react';
 import { toast } from 'sonner';
 
-export function NetworkToolsSection() {
+export const NetworkToolsSection = memo(function NetworkToolsSection() {
   const [pingUrl, setPingUrl] = useState('');
   const [dnsQuery, setDnsQuery] = useState('');
   const [ipLookup, setIpLookup] = useState('');
@@ -15,64 +15,64 @@ export function NetworkToolsSection() {
   const [dnsHistory, setDnsHistory] = useState<any[]>([]);
   const [ipHistory, setIpHistory] = useState<any[]>([]);
 
-  const handlePing = async () => {
+  const handlePing = useCallback(async () => {
     if (!pingUrl.trim()) return;
     setLoading('ping');
     const startTime = Date.now();
-    
+
     try {
       const testUrl = pingUrl.startsWith('http') ? pingUrl : `https://${pingUrl}`;
       await fetch(testUrl, { method: 'HEAD', mode: 'no-cors' });
       const endTime = Date.now();
-      
-      setPingResults(prev => [{
+
+      setPingResults((prev) => [{
         url: testUrl,
         status: 'success',
         time: endTime - startTime,
-        timestamp: new Date().toLocaleTimeString()
+        timestamp: new Date().toLocaleTimeString(),
       }, ...prev.slice(0, 4)]);
-    } catch (error) {
+    } catch {
       const endTime = Date.now();
-      setPingResults(prev => [{
+      setPingResults((prev) => [{
         url: pingUrl.startsWith('http') ? pingUrl : `https://${pingUrl}`,
         status: 'error',
         time: endTime - startTime,
-        timestamp: new Date().toLocaleTimeString()
+        timestamp: new Date().toLocaleTimeString(),
       }, ...prev.slice(0, 4)]);
     } finally {
       setLoading(null);
     }
-  };
+  }, [pingUrl]);
 
-  const handleDnsLookup = async () => {
+  const handleDnsLookup = useCallback(async () => {
     if (!dnsQuery.trim()) return;
     setLoading('dns');
-    
+
     try {
       const response = await fetch(`https://dns.google/resolve?name=${dnsQuery}&type=A`);
       const data = await response.json();
       const result = {
         ...data,
         query: dnsQuery,
-        timestamp: new Date().toLocaleTimeString()
+        timestamp: new Date().toLocaleTimeString(),
       };
-      setDnsHistory(prev => [result, ...prev.slice(0, 9)]);
-    } catch (error) {
+      setDnsHistory((prev) => [result, ...prev.slice(0, 9)]);
+    } catch {
       const result = {
         error: 'DNS lookup failed',
         query: dnsQuery,
-        timestamp: new Date().toLocaleTimeString()
+        timestamp: new Date().toLocaleTimeString(),
       };
-      setDnsHistory(prev => [result, ...prev.slice(0, 9)]);
+      setDnsHistory((prev) => [result, ...prev.slice(0, 9)]);
     } finally {
       setLoading(null);
     }
-  };
+  }, [dnsQuery]);
 
-  const handleIpLookup = async () => {
+  const handleIpLookup = useCallback(async () => {
     const query = ipLookup.trim() || undefined;
     setLoading('ip');
-    
+
     try {
       const url = query ? `https://ipapi.co/${query}/json/` : 'https://ipapi.co/json/';
       const response = await fetch(url);
@@ -80,25 +80,25 @@ export function NetworkToolsSection() {
       const result = {
         ...data,
         query: query || 'Current IP',
-        timestamp: new Date().toLocaleTimeString()
+        timestamp: new Date().toLocaleTimeString(),
       };
-      setIpHistory(prev => [result, ...prev.slice(0, 9)]);
-    } catch (error) {
+      setIpHistory((prev) => [result, ...prev.slice(0, 9)]);
+    } catch {
       const result = {
         error: 'IP lookup failed',
         query: query || 'Current IP',
-        timestamp: new Date().toLocaleTimeString()
+        timestamp: new Date().toLocaleTimeString(),
       };
-      setIpHistory(prev => [result, ...prev.slice(0, 9)]);
+      setIpHistory((prev) => [result, ...prev.slice(0, 9)]);
     } finally {
       setLoading(null);
     }
-  };
+  }, [ipLookup]);
 
-  const copyToClipboard = (text: string) => {
+  const copyToClipboard = useCallback((text: string) => {
     navigator.clipboard.writeText(text);
     toast.success('Copied to clipboard!');
-  };
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -360,4 +360,4 @@ export function NetworkToolsSection() {
       </Tabs>
     </div>
   );
-}
+});

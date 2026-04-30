@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -19,50 +19,93 @@ interface Article {
 
 type SortOption = 'date-desc' | 'date-asc' | 'title-asc' | 'title-desc';
 
-export function ArticlesSection() {
+const stripHtml = (html: string) => html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+
+const getPreview = (content: string, maxLength = 150) => {
+  const stripped = stripHtml(content);
+  return stripped.length <= maxLength ? stripped : stripped.substring(0, maxLength) + '...';
+};
+
+const wordCount = (content: string) =>
+  stripHtml(content).split(/\s+/).filter(Boolean).length;
+
+interface ArticleCardProps {
+  article: Article;
+  copied: boolean;
+  onClick: (article: Article) => void;
+  onShare: (article: Article, e: React.MouseEvent) => void;
+}
+
+const ArticleCard = memo(function ArticleCard({ article, copied, onClick, onShare }: ArticleCardProps) {
+  const handleCardClick = useCallback(() => onClick(article), [article, onClick]);
+  const handleShareClick = useCallback((e: React.MouseEvent) => onShare(article, e), [article, onShare]);
+  const dateLabel = useMemo(() => new Date(article.created_at).toLocaleDateString(), [article.created_at]);
+  const words = useMemo(() => wordCount(article.content), [article.content]);
+  const preview = useMemo(() => getPreview(article.content), [article.content]);
+
+  return (
+    <Card
+      className="border-terminal-green/30 hover:border-terminal-green transition-colors cursor-pointer"
+      onClick={handleCardClick}
+    >
+      <CardHeader className="pb-3">
+        <div className="flex items-start justify-between gap-2">
+          <CardTitle className="font-mono text-terminal-green text-base">{article.title}</CardTitle>
+          <div className="flex gap-1 shrink-0">
+            <Button variant="ghost" size="sm" className="font-mono text-xs h-7 px-2" onClick={handleShareClick}>
+              {copied ? <Check className="w-3 h-3" /> : <Share2 className="w-3 h-3" />}
+            </Button>
+            <Button variant="ghost" size="sm" className="font-mono text-xs">view →</Button>
+          </div>
+        </div>
+        <CardDescription className="font-mono text-xs">
+          {dateLabel} • {words} words
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="pt-0">
+        <p className="font-mono text-sm text-muted-foreground line-clamp-2">{preview}</p>
+      </CardContent>
+    </Card>
+  );
+});
+
+export const ArticlesSection = memo(function ArticlesSection() {
   const navigate = useNavigate();
   const { articles, loading, isCached, isOffline } = useArticlesCache();
   const [sortBy, setSortBy] = useState<SortOption>('date-desc');
   const [searchQuery, setSearchQuery] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const handleShare = async (article: Article, e?: React.MouseEvent) => {
+  const copyToClipboard = useCallback((text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    toast.success('Link copied to clipboard!');
+    setTimeout(() => setCopied(false), 2000);
+  }, []);
+
+  const handleShare = useCallback(async (article: Article, e?: React.MouseEvent) => {
     e?.stopPropagation();
     const url = `${window.location.origin}/article/${article.slug}`;
-    
     if (navigator.share) {
       try {
-        await navigator.share({
-          title: article.title,
-          url: url,
-        });
-      } catch (err) {
+        await navigator.share({ title: article.title, url });
+      } catch {
         copyToClipboard(url);
       }
     } else {
       copyToClipboard(url);
     }
-  };
+  }, [copyToClipboard]);
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    toast.success('Link copied to clipboard!');
-    setTimeout(() => setCopied(false), 2000);
-  };
+  const handleArticleClick = useCallback((article: Article) => {
+    navigate(`/article/${article.slug}`);
+  }, [navigate]);
 
-  const getFilteredArticles = () => {
-    if (!searchQuery.trim()) return articles;
-    
-    const query = searchQuery.toLowerCase();
-    return articles.filter(article => 
-      article.title.toLowerCase().includes(query) ||
-      article.content.toLowerCase().includes(query)
-    );
-  };
-
-  const getSortedArticles = () => {
-    const filtered = getFilteredArticles();
+  const sortedArticles = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    const filtered = query
+      ? articles.filter((a) => a.title.toLowerCase().includes(query) || a.content.toLowerCase().includes(query))
+      : articles;
     const sorted = [...filtered];
     switch (sortBy) {
       case 'date-desc':
@@ -76,17 +119,17 @@ export function ArticlesSection() {
       default:
         return sorted;
     }
-  };
+  }, [articles, searchQuery, sortBy]);
 
-  const getPreview = (content: string, maxLength = 150) => {
-    const stripped = content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-    if (stripped.length <= maxLength) return stripped;
-    return stripped.substring(0, maxLength) + '...';
-  };
+  const toggleDateSort = useCallback(() => {
+    setSortBy((prev) => (prev === 'date-desc' ? 'date-asc' : 'date-desc'));
+  }, []);
 
-  const handleArticleClick = (article: Article) => {
-    navigate(`/article/${article.slug}`);
-  };
+  const toggleTitleSort = useCallback(() => {
+    setSortBy((prev) => (prev === 'title-asc' ? 'title-desc' : 'title-asc'));
+  }, []);
+
+  const clearSearch = useCallback(() => setSearchQuery(''), []);
 
   if (loading) {
     return (
@@ -105,14 +148,12 @@ export function ArticlesSection() {
       <div className="space-y-4">
         <TerminalPrompt
           command="ls articles/"
-          output={isOffline ? "Offline - No cached articles available." : "No published articles found."}
+          output={isOffline ? 'Offline - No cached articles available.' : 'No published articles found.'}
           showCursor={false}
         />
       </div>
     );
   }
-
-  const sortedArticles = getSortedArticles();
 
   return (
     <div className="space-y-4">
@@ -121,8 +162,7 @@ export function ArticlesSection() {
         output={`Found ${articles.length} article${articles.length !== 1 ? 's' : ''}`}
         showCursor={false}
       />
-      
-      {/* Offline/Cached indicator */}
+
       {isCached && (
         <div className="flex items-center gap-2 px-3 py-2 bg-terminal-amber/10 border border-terminal-amber/30 rounded-md animate-fade-in">
           <CloudOff className="w-4 h-4 text-terminal-amber" />
@@ -131,7 +171,7 @@ export function ArticlesSection() {
           </span>
         </div>
       )}
-      
+
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
@@ -143,23 +183,26 @@ export function ArticlesSection() {
         />
         {searchQuery && (
           <button
-            onClick={() => setSearchQuery('')}
+            onClick={clearSearch}
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            aria-label="Clear search"
           >
             <X className="w-4 h-4" />
           </button>
         )}
       </div>
-      
+
       <div className="flex flex-wrap gap-2 items-center justify-between border border-border rounded p-2 bg-muted/50">
         <span className="font-mono text-xs text-muted-foreground">
-          {searchQuery ? `Found ${sortedArticles.length} matching article${sortedArticles.length !== 1 ? 's' : ''}` : 'Sort by:'}
+          {searchQuery
+            ? `Found ${sortedArticles.length} matching article${sortedArticles.length !== 1 ? 's' : ''}`
+            : 'Sort by:'}
         </span>
         <div className="flex flex-wrap gap-2">
           <Button
             variant={sortBy.startsWith('date') ? 'default' : 'outline'}
             size="sm"
-            onClick={() => setSortBy(sortBy === 'date-desc' ? 'date-asc' : 'date-desc')}
+            onClick={toggleDateSort}
             className="font-mono text-xs"
           >
             <Calendar className="w-3 h-3 mr-1" />
@@ -168,7 +211,7 @@ export function ArticlesSection() {
           <Button
             variant={sortBy.startsWith('title') ? 'default' : 'outline'}
             size="sm"
-            onClick={() => setSortBy(sortBy === 'title-asc' ? 'title-desc' : 'title-asc')}
+            onClick={toggleTitleSort}
             className="font-mono text-xs"
           >
             <Type className="w-3 h-3 mr-1" />
@@ -176,51 +219,24 @@ export function ArticlesSection() {
           </Button>
         </div>
       </div>
-      
+
       {sortedArticles.length === 0 ? (
         <div className="text-center py-8">
-          <p className="font-mono text-sm text-muted-foreground">
-            No articles found matching "{searchQuery}"
-          </p>
+          <p className="font-mono text-sm text-muted-foreground">No articles found matching "{searchQuery}"</p>
         </div>
       ) : (
         <div className="grid gap-3">
           {sortedArticles.map((article) => (
-          <Card 
-            key={article.id} 
-            className="border-terminal-green/30 hover:border-terminal-green transition-colors cursor-pointer"
-            onClick={() => handleArticleClick(article)}
-          >
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between gap-2">
-                <CardTitle className="font-mono text-terminal-green text-base">{article.title}</CardTitle>
-                <div className="flex gap-1 shrink-0">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="font-mono text-xs h-7 px-2"
-                    onClick={(e) => handleShare(article, e)}
-                  >
-                    {copied ? <Check className="w-3 h-3" /> : <Share2 className="w-3 h-3" />}
-                  </Button>
-                  <Button variant="ghost" size="sm" className="font-mono text-xs">
-                    view →
-                  </Button>
-                </div>
-              </div>
-              <CardDescription className="font-mono text-xs">
-                {new Date(article.created_at).toLocaleDateString()} • {article.content.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(w => w).length} words
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <p className="font-mono text-sm text-muted-foreground line-clamp-2">
-                {getPreview(article.content)}
-              </p>
-            </CardContent>
-          </Card>
+            <ArticleCard
+              key={article.id}
+              article={article}
+              copied={copied}
+              onClick={handleArticleClick}
+              onShare={handleShare}
+            />
           ))}
         </div>
       )}
     </div>
   );
-}
+});
