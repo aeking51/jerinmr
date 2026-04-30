@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Activity, Globe, Search, Loader2, Trash2, Copy, Info } from 'lucide-react';
 import { toast } from 'sonner';
 
-export function NetworkToolsSection() {
+export const NetworkToolsSection = memo(function NetworkToolsSection() {
   const [pingUrl, setPingUrl] = useState('');
   const [dnsQuery, setDnsQuery] = useState('');
   const [ipLookup, setIpLookup] = useState('');
