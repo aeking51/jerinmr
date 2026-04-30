@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
@@ -63,7 +63,7 @@ interface HeadersInfo {
   error?: string;
 }
 
-export function UtilityToolsSection() {
+export const UtilityToolsSection = memo(function UtilityToolsSection() {
   const [base64Input, setBase64Input] = useState('');
   const [base64Output, setBase64Output] = useState('');
   const [hashInput, setHashInput] = useState('');
@@ -1123,4 +1123,4 @@ export function UtilityToolsSection() {
       </Tabs>
     </div>
   );
-}
+});
