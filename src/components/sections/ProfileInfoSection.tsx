@@ -348,11 +348,11 @@ Practical Labs:
 
   return (
     <div className="space-y-8">
-      {/* About Section */}
+      {/* About + Experience Section */}
       <div className="space-y-4">
         <TerminalPrompt
-          command="cat about.txt"
-          output={aboutOutput}
+          command="cat about.txt experience.log"
+          output={aboutOutput + '\n' + experienceOutput}
           showCursor={false}
         />
       </div>
@@ -365,15 +365,6 @@ Practical Labs:
             {skillsOutput}
           </div>
         </div>
-      </div>
-
-      {/* Experience Section */}
-      <div className="space-y-4">
-        <TerminalPrompt
-          command="cat experience.log"
-          output={experienceOutput}
-          showCursor={false}
-        />
       </div>
 
       {/* Whois / Contact Section */}
