@@ -360,4 +360,4 @@ export const NetworkToolsSection = memo(function NetworkToolsSection() {
       </Tabs>
     </div>
   );
-}
+});
