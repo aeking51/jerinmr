@@ -10,7 +10,7 @@ import { useEasterEggs } from '@/hooks/useEasterEggs';
 
 // Lazy load heavy sections
 const ProfileInfoSection = lazy(() => import('./sections/ProfileInfoSection').then(m => ({ default: m.ProfileInfoSection })));
-const ContactSection = lazy(() => import('./sections/ContactSection').then(m => ({ default: m.ContactSection })));
+
 const NetworkToolsSection = lazy(() => import('./sections/NetworkToolsSection').then(m => ({ default: m.NetworkToolsSection })));
 const UtilityToolsSection = lazy(() => import('./sections/UtilityToolsSection').then(m => ({ default: m.UtilityToolsSection })));
 const ArticlesSection = lazy(() => import('./sections/ArticlesSection').then(m => ({ default: m.ArticlesSection })));
