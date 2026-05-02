@@ -138,7 +138,9 @@ const AdminProfile = () => {
               <User className="h-8 w-8 text-primary" />
               Profile Editor
             </h1>
-            <p className="text-muted-foreground">Edit your portfolio's "whois" information</p>
+            <p className="text-muted-foreground">
+              Edit content for <code className="bg-muted px-1 rounded">cd ~</code> (Home) and <code className="bg-muted px-1 rounded">cat profile/*</code> (Profile) terminal sections
+            </p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             <Button onClick={() => navigate('/admin/visitors')} variant="outline" size="sm">Visitors</Button>
