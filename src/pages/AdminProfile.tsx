@@ -83,9 +83,14 @@ const AdminProfile = () => {
   }, {} as Record<string, SiteContentItem[]>) ?? {};
 
   const categoryLabels: Record<string, string> = {
-    profile: '👤 Profile Information',
-    about: '📝 About & Personal',
+    profile: '🏠 Home (cd ~) — Profile header & contact',
+    about: '📂 Profile (cat profile/*) — About, philosophy, hobbies',
     general: '⚙️ General',
+  };
+
+  const categoryDescriptions: Record<string, string> = {
+    profile: 'Drives the Home tab (cd ~): name, role, focus, location, contact details and bio shown in the profile card.',
+    about: 'Drives the Profile tab (cat profile/*): philosophy, hobbies and interests rendered inside about.txt.',
   };
 
   const isTextarea = (key: string) => 
@@ -133,7 +138,9 @@ const AdminProfile = () => {
               <User className="h-8 w-8 text-primary" />
               Profile Editor
             </h1>
-            <p className="text-muted-foreground">Edit your portfolio's "whois" information</p>
+            <p className="text-muted-foreground">
+              Edit content for <code className="bg-muted px-1 rounded">cd ~</code> (Home) and <code className="bg-muted px-1 rounded">cat profile/*</code> (Profile) terminal sections
+            </p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             <Button onClick={() => navigate('/admin/visitors')} variant="outline" size="sm">Visitors</Button>
@@ -182,8 +189,7 @@ const AdminProfile = () => {
                   {categoryLabels[category] || category}
                 </CardTitle>
                 <CardDescription>
-                  {category === 'profile' && 'Your name, contact details, and bio displayed on the portfolio'}
-                  {category === 'about' && 'Personal philosophy, hobbies, and interests shown in the about section'}
+                  {categoryDescriptions[category]}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
