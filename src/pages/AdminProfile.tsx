@@ -83,9 +83,14 @@ const AdminProfile = () => {
   }, {} as Record<string, SiteContentItem[]>) ?? {};
 
   const categoryLabels: Record<string, string> = {
-    profile: '👤 Profile Information',
-    about: '📝 About & Personal',
+    profile: '🏠 Home (cd ~) — Profile header & contact',
+    about: '📂 Profile (cat profile/*) — About, philosophy, hobbies',
     general: '⚙️ General',
+  };
+
+  const categoryDescriptions: Record<string, string> = {
+    profile: 'Drives the Home tab (cd ~): name, role, focus, location, contact details and bio shown in the profile card.',
+    about: 'Drives the Profile tab (cat profile/*): philosophy, hobbies and interests rendered inside about.txt.',
   };
 
   const isTextarea = (key: string) => 
