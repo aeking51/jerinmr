@@ -189,8 +189,7 @@ const AdminProfile = () => {
                   {categoryLabels[category] || category}
                 </CardTitle>
                 <CardDescription>
-                  {category === 'profile' && 'Your name, contact details, and bio displayed on the portfolio'}
-                  {category === 'about' && 'Personal philosophy, hobbies, and interests shown in the about section'}
+                  {categoryDescriptions[category]}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
