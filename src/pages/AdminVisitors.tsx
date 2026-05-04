@@ -20,7 +20,7 @@ interface Visitor {
   timezone: string;
   language: string;
   referrer: string;
-  page_url: string;
+  
   visited_at: string;
   session_id: string;
   is_mobile: boolean;
