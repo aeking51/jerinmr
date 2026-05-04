@@ -223,7 +223,6 @@ export type Database = {
           is_mobile: boolean | null
           language: string | null
           operating_system: string | null
-          page_url: string | null
           referrer: string | null
           screen_resolution: string | null
           session_id: string | null
@@ -241,7 +240,6 @@ export type Database = {
           is_mobile?: boolean | null
           language?: string | null
           operating_system?: string | null
-          page_url?: string | null
           referrer?: string | null
           screen_resolution?: string | null
           session_id?: string | null
@@ -259,7 +257,6 @@ export type Database = {
           is_mobile?: boolean | null
           language?: string | null
           operating_system?: string | null
-          page_url?: string | null
           referrer?: string | null
           screen_resolution?: string | null
           session_id?: string | null

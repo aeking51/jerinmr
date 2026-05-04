@@ -1,0 +1,1 @@
+ALTER TABLE public.visitors DROP COLUMN IF EXISTS page_url;

@@ -11,7 +11,6 @@ interface VisitorData {
   timezone: string;
   language: string;
   referrer: string;
-  page_url: string;
   session_id: string;
   is_mobile: boolean;
   country?: string;
@@ -97,7 +96,6 @@ export const useVisitorTracking = () => {
         // Input validation and sanitization
         const userAgent = navigator.userAgent.substring(0, 500); // Limit length
         const referrer = document.referrer ? document.referrer.substring(0, 500) : 'Direct';
-        const pageUrl = window.location.href.substring(0, 500);
         const deviceType = detectDeviceType();
         const browser = detectBrowser();
         const os = detectOS();
@@ -118,7 +116,6 @@ export const useVisitorTracking = () => {
           timezone: Intl.DateTimeFormat().resolvedOptions().timeZone.substring(0, 100),
           language: navigator.language.substring(0, 10),
           referrer: referrer,
-          page_url: pageUrl,
           session_id: sessionId.substring(0, 100),
           is_mobile: /Mobi|Android/i.test(navigator.userAgent),
           country: locationData.country?.substring(0, 100),
