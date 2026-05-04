@@ -20,10 +20,10 @@ const ShortLinkRedirect = () => {
     const fetchLink = async () => {
       if (!slug) { setError(true); return; }
 
-      // Only fetch non-sensitive fields; password is never sent to client
+      // Fetch only non-sensitive fields; password column is not readable by clients
       const { data, error: fetchError } = await supabase
         .from('short_links')
-        .select('target_url, password')
+        .select('target_url')
         .eq('slug', slug)
         .eq('is_active', true)
         .maybeSingle();
@@ -33,8 +33,13 @@ const ShortLinkRedirect = () => {
         return;
       }
 
-      // Check if link has a password (value won't be null if set)
-      if (data.password) {
+      // Check whether this link requires a password via secure RPC
+      const { data: requiresPassword } = await supabase.rpc(
+        'short_link_requires_password',
+        { _slug: slug }
+      );
+
+      if (requiresPassword) {
         setNeedsPassword(true);
       } else {
         supabase.rpc('increment_short_link_clicks', { _slug: slug });
