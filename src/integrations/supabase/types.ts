@@ -289,6 +289,10 @@ export type Database = {
         Args: { _slug: string }
         Returns: undefined
       }
+      short_link_requires_password: {
+        Args: { _slug: string }
+        Returns: boolean
+      }
       verify_short_link_password: {
         Args: { _password: string; _slug: string }
         Returns: string
