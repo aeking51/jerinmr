@@ -85,16 +85,33 @@ const AdminProfile = () => {
   const categoryLabels: Record<string, string> = {
     profile: '🏠 Home (cd ~) — Profile header & contact',
     about: '📂 Profile (cat profile/*) — About, philosophy, hobbies',
+    profile_sections: '🖥️ Profile Terminal Sections — Raw output for cat/ls/whois commands',
     general: '⚙️ General',
   };
 
   const categoryDescriptions: Record<string, string> = {
     profile: 'Drives the Home tab (cd ~): name, role, focus, location, contact details and bio shown in the profile card.',
     about: 'Drives the Profile tab (cat profile/*): philosophy, hobbies and interests rendered inside about.txt.',
+    profile_sections: 'Raw pre-formatted text shown verbatim under each terminal command in the Profile tab. Use the "Add field" button to add a new section/command.',
   };
 
-  const isTextarea = (key: string) => 
+  const isTextarea = (key: string) =>
     ['profile_bio', 'profile_philosophy', 'profile_hobbies', 'profile_interests'].includes(key);
+
+  const isLargeTextarea = (category: string) => category === 'profile_sections';
+
+  const handleAddSection = async () => {
+    const label = window.prompt('Command label (e.g. "cat about.txt experience.log"):')?.trim();
+    if (!label) return;
+    const slug = label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 40) || `section_${Date.now()}`;
+    const key = `section_${slug}_${Date.now().toString(36)}`;
+    const { error } = await supabase.from('site_content').insert({
+      key, label, value: '', category: 'profile_sections',
+    });
+    if (error) { toast.error('Failed to add field: ' + error.message); return; }
+    toast.success('Field added');
+    refetch();
+  };
 
   if (checkingAuth) {
     return (
