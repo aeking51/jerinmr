@@ -356,32 +356,56 @@ ${interestsList}
     }
   }, [submitted, contactName, contactEmail, message]);
 
+  const aboutExperienceOutput = sectionsMap['section_about_experience']?.value ?? combinedOutput;
+  const skillsOutput = sectionsMap['section_skills']?.value;
+  const whoisOutput = sectionsMap['section_whois']?.value ?? WHOIS_OUTPUT;
+
+  const aboutExperienceCmd = sectionsMap['section_about_experience']?.label || 'cat about.txt experience.log';
+  const skillsCmd = sectionsMap['section_skills']?.label || 'ls -la skills/';
+  const whoisCmd = sectionsMap['section_whois']?.label || 'whois jerinmr';
+
+  // Any extra editable sections added by admin beyond the 3 known keys
+  const extraSections = (sectionItems ?? []).filter(
+    (it) => !['section_about_experience', 'section_skills', 'section_whois'].includes(it.key)
+  );
+
   return (
     <div className="space-y-8">
       {/* About + Experience */}
       <div className="space-y-4">
         <TerminalPrompt
-          command="cat about.txt experience.log"
-          output={combinedOutput}
+          command={aboutExperienceCmd}
+          output={aboutExperienceOutput}
           showCursor={false}
         />
       </div>
 
       {/* Skills */}
       <div className="space-y-4">
-        <div className="space-y-2">
-          <div className="text-primary font-mono text-sm">user@portfolio:~$ ls -la skills/</div>
-          <div className="bg-terminal-bg p-2 sm:p-4 rounded-lg font-mono text-xs sm:text-sm overflow-x-auto">
-            <SkillsTree />
+        {skillsOutput ? (
+          <TerminalPrompt command={skillsCmd} output={skillsOutput} showCursor={false} />
+        ) : (
+          <div className="space-y-2">
+            <div className="text-primary font-mono text-sm">user@portfolio:~$ {skillsCmd}</div>
+            <div className="bg-terminal-bg p-2 sm:p-4 rounded-lg font-mono text-xs sm:text-sm overflow-x-auto">
+              <SkillsTree />
+            </div>
           </div>
-        </div>
+        )}
       </div>
+
+      {/* Extra admin-added sections */}
+      {extraSections.map((it) => (
+        <div key={it.key} className="space-y-4">
+          <TerminalPrompt command={it.label || it.key} output={it.value} showCursor={false} />
+        </div>
+      ))}
 
       {/* Whois / Contact */}
       <div className="space-y-6">
         <TerminalPrompt
-          command="whois jerinmr"
-          output={WHOIS_OUTPUT}
+          command={whoisCmd}
+          output={whoisOutput}
           showCursor={false}
         />
 
