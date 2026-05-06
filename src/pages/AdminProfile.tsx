@@ -202,12 +202,21 @@ const AdminProfile = () => {
           Object.entries(groupedContent).map(([category, items]) => (
             <Card key={category}>
               <CardHeader>
-                <CardTitle className="text-lg">
-                  {categoryLabels[category] || category}
-                </CardTitle>
-                <CardDescription>
-                  {categoryDescriptions[category]}
-                </CardDescription>
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <CardTitle className="text-lg">
+                      {categoryLabels[category] || category}
+                    </CardTitle>
+                    <CardDescription>
+                      {categoryDescriptions[category]}
+                    </CardDescription>
+                  </div>
+                  {category === 'profile_sections' && (
+                    <Button onClick={handleAddSection} size="sm" variant="outline" className="gap-2 shrink-0">
+                      <Plus className="h-4 w-4" /> Add field
+                    </Button>
+                  )}
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 {items.map((item) => (
@@ -218,7 +227,16 @@ const AdminProfile = () => {
                         <Badge variant="outline" className="text-xs text-primary">modified</Badge>
                       )}
                     </Label>
-                    {isTextarea(item.key) ? (
+                    {isLargeTextarea(item.category) ? (
+                      <Textarea
+                        id={item.key}
+                        value={editValues[item.key] ?? ''}
+                        onChange={(e) => handleChange(item.key, e.target.value)}
+                        rows={16}
+                        className="font-mono text-xs whitespace-pre"
+                        placeholder={item.label}
+                      />
+                    ) : isTextarea(item.key) ? (
                       <Textarea
                         id={item.key}
                         value={editValues[item.key] ?? ''}
