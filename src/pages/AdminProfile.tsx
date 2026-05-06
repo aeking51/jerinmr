@@ -8,8 +8,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { 
-  LogOut, ShieldAlert, User, Save, Loader2, RefreshCw
+import {
+  LogOut, ShieldAlert, User, Save, Loader2, RefreshCw, Plus
 } from 'lucide-react';
 import { useSiteContent, useUpdateSiteContent, type SiteContentItem } from '@/hooks/useSiteContent';
 
@@ -85,16 +85,33 @@ const AdminProfile = () => {
   const categoryLabels: Record<string, string> = {
     profile: '🏠 Home (cd ~) — Profile header & contact',
     about: '📂 Profile (cat profile/*) — About, philosophy, hobbies',
+    profile_sections: '🖥️ Profile Terminal Sections — Raw output for cat/ls/whois commands',
     general: '⚙️ General',
   };
 
   const categoryDescriptions: Record<string, string> = {
     profile: 'Drives the Home tab (cd ~): name, role, focus, location, contact details and bio shown in the profile card.',
     about: 'Drives the Profile tab (cat profile/*): philosophy, hobbies and interests rendered inside about.txt.',
+    profile_sections: 'Raw pre-formatted text shown verbatim under each terminal command in the Profile tab. Use the "Add field" button to add a new section/command.',
   };
 
-  const isTextarea = (key: string) => 
+  const isTextarea = (key: string) =>
     ['profile_bio', 'profile_philosophy', 'profile_hobbies', 'profile_interests'].includes(key);
+
+  const isLargeTextarea = (category: string) => category === 'profile_sections';
+
+  const handleAddSection = async () => {
+    const label = window.prompt('Command label (e.g. "cat about.txt experience.log"):')?.trim();
+    if (!label) return;
+    const slug = label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 40) || `section_${Date.now()}`;
+    const key = `section_${slug}_${Date.now().toString(36)}`;
+    const { error } = await supabase.from('site_content').insert({
+      key, label, value: '', category: 'profile_sections',
+    });
+    if (error) { toast.error('Failed to add field: ' + error.message); return; }
+    toast.success('Field added');
+    refetch();
+  };
 
   if (checkingAuth) {
     return (
@@ -185,12 +202,21 @@ const AdminProfile = () => {
           Object.entries(groupedContent).map(([category, items]) => (
             <Card key={category}>
               <CardHeader>
-                <CardTitle className="text-lg">
-                  {categoryLabels[category] || category}
-                </CardTitle>
-                <CardDescription>
-                  {categoryDescriptions[category]}
-                </CardDescription>
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <CardTitle className="text-lg">
+                      {categoryLabels[category] || category}
+                    </CardTitle>
+                    <CardDescription>
+                      {categoryDescriptions[category]}
+                    </CardDescription>
+                  </div>
+                  {category === 'profile_sections' && (
+                    <Button onClick={handleAddSection} size="sm" variant="outline" className="gap-2 shrink-0">
+                      <Plus className="h-4 w-4" /> Add field
+                    </Button>
+                  )}
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 {items.map((item) => (
@@ -201,7 +227,16 @@ const AdminProfile = () => {
                         <Badge variant="outline" className="text-xs text-primary">modified</Badge>
                       )}
                     </Label>
-                    {isTextarea(item.key) ? (
+                    {isLargeTextarea(item.category) ? (
+                      <Textarea
+                        id={item.key}
+                        value={editValues[item.key] ?? ''}
+                        onChange={(e) => handleChange(item.key, e.target.value)}
+                        rows={16}
+                        className="font-mono text-xs whitespace-pre"
+                        placeholder={item.label}
+                      />
+                    ) : isTextarea(item.key) ? (
                       <Textarea
                         id={item.key}
                         value={editValues[item.key] ?? ''}
