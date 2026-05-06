@@ -8,8 +8,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { 
-  LogOut, ShieldAlert, User, Save, Loader2, RefreshCw
+import {
+  LogOut, ShieldAlert, User, Save, Loader2, RefreshCw, Plus
 } from 'lucide-react';
 import { useSiteContent, useUpdateSiteContent, type SiteContentItem } from '@/hooks/useSiteContent';
 
