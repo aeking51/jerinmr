@@ -281,11 +281,8 @@ export const ProfileInfoSection = memo(function ProfileInfoSection() {
   const { contentMap: about } = useSiteContentMap('about');
   const { data: sectionItems } = useSiteContent('profile_sections');
 
-  const sectionsMap = useMemo(() => {
-    const m: Record<string, { value: string; label: string }> = {};
-    (sectionItems ?? []).forEach((it) => { m[it.key] = { value: it.value, label: it.label }; });
-    return m;
-  }, [sectionItems]);
+  // sectionsMap retained intentionally minimal; orderedSections handles render
+
 
   const aboutOutput = useMemo(() => {
     const name = profile['profile_name'] || 'Jerin M R';
