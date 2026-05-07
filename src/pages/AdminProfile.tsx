@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import {
-  LogOut, ShieldAlert, User, Save, Loader2, RefreshCw, Plus
+  LogOut, ShieldAlert, User, Save, Loader2, RefreshCw, Plus, Trash2, Pencil
 } from 'lucide-react';
 import { useSiteContent, useUpdateSiteContent, type SiteContentItem } from '@/hooks/useSiteContent';
 
@@ -110,6 +110,23 @@ const AdminProfile = () => {
     });
     if (error) { toast.error('Failed to add field: ' + error.message); return; }
     toast.success('Field added');
+    refetch();
+  };
+
+  const handleRenameSection = async (key: string, currentLabel: string) => {
+    const label = window.prompt('Update command label:', currentLabel)?.trim();
+    if (!label || label === currentLabel) return;
+    const { error } = await supabase.from('site_content').update({ label }).eq('key', key);
+    if (error) { toast.error('Failed to rename: ' + error.message); return; }
+    toast.success('Label updated');
+    refetch();
+  };
+
+  const handleDeleteSection = async (key: string, label: string) => {
+    if (!window.confirm(`Delete section "${label}"? This cannot be undone.`)) return;
+    const { error } = await supabase.from('site_content').delete().eq('key', key);
+    if (error) { toast.error('Failed to delete: ' + error.message); return; }
+    toast.success('Section deleted');
     refetch();
   };
 
@@ -221,12 +238,24 @@ const AdminProfile = () => {
               <CardContent className="space-y-4">
                 {items.map((item) => (
                   <div key={item.key} className="space-y-1.5">
-                    <Label htmlFor={item.key} className="flex items-center gap-2">
-                      {item.label}
-                      {dirtyKeys.has(item.key) && (
-                        <Badge variant="outline" className="text-xs text-primary">modified</Badge>
+                    <div className="flex items-center justify-between gap-2">
+                      <Label htmlFor={item.key} className="flex items-center gap-2">
+                        {item.label}
+                        {dirtyKeys.has(item.key) && (
+                          <Badge variant="outline" className="text-xs text-primary">modified</Badge>
+                        )}
+                      </Label>
+                      {item.category === 'profile_sections' && (
+                        <div className="flex items-center gap-1">
+                          <Button onClick={() => handleRenameSection(item.key, item.label)} size="sm" variant="ghost" className="h-7 px-2 gap-1">
+                            <Pencil className="h-3.5 w-3.5" /> Rename
+                          </Button>
+                          <Button onClick={() => handleDeleteSection(item.key, item.label)} size="sm" variant="ghost" className="h-7 px-2 gap-1 text-destructive hover:text-destructive">
+                            <Trash2 className="h-3.5 w-3.5" /> Delete
+                          </Button>
+                        </div>
                       )}
-                    </Label>
+                    </div>
                     {isLargeTextarea(item.category) ? (
                       <Textarea
                         id={item.key}
