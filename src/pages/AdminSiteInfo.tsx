@@ -216,6 +216,30 @@ const AdminSiteInfo = () => {
     {
       title: 'Admin Authentication',
       description: 'Secure admin panel with role-based access control and rate limiting'
+    },
+    {
+      title: 'Editable Profile Sections',
+      description: 'Admin-managed terminal profile sections (cat/ls/whois) with reorder, rename and delete'
+    },
+    {
+      title: 'URL Shortener',
+      description: 'Create branded /sl/slug short links with optional password protection and click tracking'
+    },
+    {
+      title: 'Quick Links Management',
+      description: 'Curated quick-access links with display ordering and active/inactive toggling'
+    },
+    {
+      title: 'Contact Form',
+      description: 'Terminal message.txt form persists to DB and emails admin via Resend'
+    },
+    {
+      title: 'SSH Web Client',
+      description: 'Embedded third-party SSH client with risk gate, live timer, and history tracking'
+    },
+    {
+      title: 'Dynamic Sitemap',
+      description: 'Edge function generates XML sitemap from published articles for SEO'
     }
   ];
 
@@ -461,37 +485,68 @@ const AdminSiteInfo = () => {
             <CardDescription>PostgreSQL database structure</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="p-4 border rounded-lg">
                 <div className="font-semibold mb-2 text-terminal-green">articles</div>
                 <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>• id (UUID, PK)</li>
-                  <li>• title (TEXT)</li>
-                  <li>• slug (TEXT, unique)</li>
-                  <li>• content (TEXT)</li>
+                  <li>• title, slug, content</li>
                   <li>• published (BOOLEAN)</li>
-                  <li>• created_at, updated_at</li>
+                  <li>• Public read for published only</li>
                 </ul>
               </div>
               <div className="p-4 border rounded-lg">
                 <div className="font-semibold mb-2 text-terminal-green">visitors</div>
                 <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>• id (UUID, PK)</li>
-                  <li>• ip_address, user_agent</li>
-                  <li>• device_type, browser, OS</li>
-                  <li>• country, city</li>
-                  <li>• session_id, referrer</li>
-                  <li>• visited_at (TIMESTAMP)</li>
+                  <li>• ip_address (anonymized)</li>
+                  <li>• device, browser, OS</li>
+                  <li>• country, city, timezone</li>
+                  <li>• 90-day retention cleanup</li>
                 </ul>
               </div>
               <div className="p-4 border rounded-lg">
                 <div className="font-semibold mb-2 text-terminal-green">user_roles</div>
                 <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>• id (UUID, PK)</li>
-                  <li>• user_id (UUID, FK)</li>
                   <li>• role (app_role enum)</li>
-                  <li>• created_at</li>
-                  <li className="mt-2 text-xs">Roles: admin, moderator, user</li>
+                  <li>• Roles: admin, moderator, user</li>
+                  <li>• Checked via has_role()</li>
+                </ul>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <div className="font-semibold mb-2 text-terminal-green">site_content</div>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>• key, value, label</li>
+                  <li>• category, display_order</li>
+                  <li>• Powers editable terminal sections</li>
+                </ul>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <div className="font-semibold mb-2 text-terminal-green">quick_links</div>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>• title, url, icon</li>
+                  <li>• display_order, is_active</li>
+                </ul>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <div className="font-semibold mb-2 text-terminal-green">short_links</div>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>• slug, target_url</li>
+                  <li>• password (optional)</li>
+                  <li>• click_count, is_active</li>
+                </ul>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <div className="font-semibold mb-2 text-terminal-green">contact_messages</div>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>• name, email, message</li>
+                  <li>• Public insert, admin-only read</li>
+                </ul>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <div className="font-semibold mb-2 text-terminal-green">rate_limits</div>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>• function_name, ip_address</li>
+                  <li>• request_count, window_start</li>
+                  <li>• 10 req/min/IP edge fn limit</li>
                 </ul>
               </div>
             </div>
@@ -508,7 +563,7 @@ const AdminSiteInfo = () => {
             <CardDescription>Serverless API endpoints</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="p-4 border rounded-lg">
                 <div className="font-semibold mb-1">dns-lookup</div>
                 <p className="text-sm text-muted-foreground">Performs DNS queries and returns A, AAAA, and NS records</p>
@@ -520,6 +575,14 @@ const AdminSiteInfo = () => {
               <div className="p-4 border rounded-lg">
                 <div className="font-semibold mb-1">fetch-headers</div>
                 <p className="text-sm text-muted-foreground">Retrieves HTTP headers from any URL for security analysis</p>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <div className="font-semibold mb-1">send-contact-message</div>
+                <p className="text-sm text-muted-foreground">Persists contact form submissions and emails admin via Resend</p>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <div className="font-semibold mb-1">sitemap</div>
+                <p className="text-sm text-muted-foreground">Generates dynamic XML sitemap from published articles for SEO</p>
               </div>
             </div>
           </CardContent>
