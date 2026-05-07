@@ -7,6 +7,7 @@ export interface SiteContentItem {
   value: string;
   label: string;
   category: string;
+  display_order: number;
 }
 
 export function useSiteContent(category?: string) {
@@ -17,7 +18,7 @@ export function useSiteContent(category?: string) {
       if (category) {
         query = query.eq('category', category);
       }
-      const { data, error } = await query.order('key');
+      const { data, error } = await query.order('display_order').order('key');
       if (error) throw error;
       return data as SiteContentItem[];
     },

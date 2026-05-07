@@ -165,6 +165,7 @@ export type Database = {
         Row: {
           category: string
           created_at: string
+          display_order: number
           id: string
           key: string
           label: string
@@ -174,6 +175,7 @@ export type Database = {
         Insert: {
           category?: string
           created_at?: string
+          display_order?: number
           id?: string
           key: string
           label?: string
@@ -183,6 +185,7 @@ export type Database = {
         Update: {
           category?: string
           created_at?: string
+          display_order?: number
           id?: string
           key?: string
           label?: string
