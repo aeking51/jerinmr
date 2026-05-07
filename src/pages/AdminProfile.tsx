@@ -267,6 +267,12 @@ const AdminProfile = () => {
                       </Label>
                       {item.category === 'profile_sections' && (
                         <div className="flex items-center gap-1">
+                          <Button onClick={() => handleMoveSection(item.key, -1)} size="sm" variant="ghost" className="h-7 w-7 p-0" title="Move up">
+                            <ArrowUp className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button onClick={() => handleMoveSection(item.key, 1)} size="sm" variant="ghost" className="h-7 w-7 p-0" title="Move down">
+                            <ArrowDown className="h-3.5 w-3.5" />
+                          </Button>
                           <Button onClick={() => handleRenameSection(item.key, item.label)} size="sm" variant="ghost" className="h-7 px-2 gap-1">
                             <Pencil className="h-3.5 w-3.5" /> Rename
                           </Button>
