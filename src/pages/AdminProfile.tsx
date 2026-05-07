@@ -238,12 +238,24 @@ const AdminProfile = () => {
               <CardContent className="space-y-4">
                 {items.map((item) => (
                   <div key={item.key} className="space-y-1.5">
-                    <Label htmlFor={item.key} className="flex items-center gap-2">
-                      {item.label}
-                      {dirtyKeys.has(item.key) && (
-                        <Badge variant="outline" className="text-xs text-primary">modified</Badge>
+                    <div className="flex items-center justify-between gap-2">
+                      <Label htmlFor={item.key} className="flex items-center gap-2">
+                        {item.label}
+                        {dirtyKeys.has(item.key) && (
+                          <Badge variant="outline" className="text-xs text-primary">modified</Badge>
+                        )}
+                      </Label>
+                      {item.category === 'profile_sections' && (
+                        <div className="flex items-center gap-1">
+                          <Button onClick={() => handleRenameSection(item.key, item.label)} size="sm" variant="ghost" className="h-7 px-2 gap-1">
+                            <Pencil className="h-3.5 w-3.5" /> Rename
+                          </Button>
+                          <Button onClick={() => handleDeleteSection(item.key, item.label)} size="sm" variant="ghost" className="h-7 px-2 gap-1 text-destructive hover:text-destructive">
+                            <Trash2 className="h-3.5 w-3.5" /> Delete
+                          </Button>
+                        </div>
                       )}
-                    </Label>
+                    </div>
                     {isLargeTextarea(item.category) ? (
                       <Textarea
                         id={item.key}
