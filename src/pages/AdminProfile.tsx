@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import {
-  LogOut, ShieldAlert, User, Save, Loader2, RefreshCw, Plus, Trash2, Pencil
+  LogOut, ShieldAlert, User, Save, Loader2, RefreshCw, Plus, Trash2, Pencil, ArrowUp, ArrowDown
 } from 'lucide-react';
 import { useSiteContent, useUpdateSiteContent, type SiteContentItem } from '@/hooks/useSiteContent';
 
@@ -105,13 +105,33 @@ const AdminProfile = () => {
     if (!label) return;
     const slug = label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 40) || `section_${Date.now()}`;
     const key = `section_${slug}_${Date.now().toString(36)}`;
+    const existing = (allContent ?? []).filter((c) => c.category === 'profile_sections');
+    const nextOrder = existing.reduce((max, c) => Math.max(max, c.display_order ?? 0), 0) + 1;
     const { error } = await supabase.from('site_content').insert({
-      key, label, value: '', category: 'profile_sections',
+      key, label, value: '', category: 'profile_sections', display_order: nextOrder,
     });
     if (error) { toast.error('Failed to add field: ' + error.message); return; }
     toast.success('Field added');
     refetch();
   };
+
+  const handleMoveSection = async (key: string, direction: -1 | 1) => {
+    const list = (allContent ?? [])
+      .filter((c) => c.category === 'profile_sections')
+      .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0));
+    const idx = list.findIndex((c) => c.key === key);
+    const swapIdx = idx + direction;
+    if (idx < 0 || swapIdx < 0 || swapIdx >= list.length) return;
+    const a = list[idx], b = list[swapIdx];
+    // Ensure unique orders if both are 0/duplicate
+    const aOrder = a.display_order ?? idx + 1;
+    const bOrder = b.display_order ?? swapIdx + 1;
+    const { error: e1 } = await supabase.from('site_content').update({ display_order: bOrder }).eq('key', a.key);
+    const { error: e2 } = await supabase.from('site_content').update({ display_order: aOrder }).eq('key', b.key);
+    if (e1 || e2) { toast.error('Failed to reorder'); return; }
+    refetch();
+  };
+
 
   const handleRenameSection = async (key: string, currentLabel: string) => {
     const label = window.prompt('Update command label:', currentLabel)?.trim();
@@ -247,6 +267,12 @@ const AdminProfile = () => {
                       </Label>
                       {item.category === 'profile_sections' && (
                         <div className="flex items-center gap-1">
+                          <Button onClick={() => handleMoveSection(item.key, -1)} size="sm" variant="ghost" className="h-7 w-7 p-0" title="Move up">
+                            <ArrowUp className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button onClick={() => handleMoveSection(item.key, 1)} size="sm" variant="ghost" className="h-7 w-7 p-0" title="Move down">
+                            <ArrowDown className="h-3.5 w-3.5" />
+                          </Button>
                           <Button onClick={() => handleRenameSection(item.key, item.label)} size="sm" variant="ghost" className="h-7 px-2 gap-1">
                             <Pencil className="h-3.5 w-3.5" /> Rename
                           </Button>
