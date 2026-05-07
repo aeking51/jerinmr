@@ -216,6 +216,30 @@ const AdminSiteInfo = () => {
     {
       title: 'Admin Authentication',
       description: 'Secure admin panel with role-based access control and rate limiting'
+    },
+    {
+      title: 'Editable Profile Sections',
+      description: 'Admin-managed terminal profile sections (cat/ls/whois) with reorder, rename and delete'
+    },
+    {
+      title: 'URL Shortener',
+      description: 'Create branded /sl/slug short links with optional password protection and click tracking'
+    },
+    {
+      title: 'Quick Links Management',
+      description: 'Curated quick-access links with display ordering and active/inactive toggling'
+    },
+    {
+      title: 'Contact Form',
+      description: 'Terminal message.txt form persists to DB and emails admin via Resend'
+    },
+    {
+      title: 'SSH Web Client',
+      description: 'Embedded third-party SSH client with risk gate, live timer, and history tracking'
+    },
+    {
+      title: 'Dynamic Sitemap',
+      description: 'Edge function generates XML sitemap from published articles for SEO'
     }
   ];
 
