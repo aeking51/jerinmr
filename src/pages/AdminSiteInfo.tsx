@@ -563,7 +563,7 @@ const AdminSiteInfo = () => {
             <CardDescription>Serverless API endpoints</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="p-4 border rounded-lg">
                 <div className="font-semibold mb-1">dns-lookup</div>
                 <p className="text-sm text-muted-foreground">Performs DNS queries and returns A, AAAA, and NS records</p>
@@ -575,6 +575,14 @@ const AdminSiteInfo = () => {
               <div className="p-4 border rounded-lg">
                 <div className="font-semibold mb-1">fetch-headers</div>
                 <p className="text-sm text-muted-foreground">Retrieves HTTP headers from any URL for security analysis</p>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <div className="font-semibold mb-1">send-contact-message</div>
+                <p className="text-sm text-muted-foreground">Persists contact form submissions and emails admin via Resend</p>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <div className="font-semibold mb-1">sitemap</div>
+                <p className="text-sm text-muted-foreground">Generates dynamic XML sitemap from published articles for SEO</p>
               </div>
             </div>
           </CardContent>
