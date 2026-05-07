@@ -113,6 +113,23 @@ const AdminProfile = () => {
     refetch();
   };
 
+  const handleRenameSection = async (key: string, currentLabel: string) => {
+    const label = window.prompt('Update command label:', currentLabel)?.trim();
+    if (!label || label === currentLabel) return;
+    const { error } = await supabase.from('site_content').update({ label }).eq('key', key);
+    if (error) { toast.error('Failed to rename: ' + error.message); return; }
+    toast.success('Label updated');
+    refetch();
+  };
+
+  const handleDeleteSection = async (key: string, label: string) => {
+    if (!window.confirm(`Delete section "${label}"? This cannot be undone.`)) return;
+    const { error } = await supabase.from('site_content').delete().eq('key', key);
+    if (error) { toast.error('Failed to delete: ' + error.message); return; }
+    toast.success('Section deleted');
+    refetch();
+  };
+
   if (checkingAuth) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
