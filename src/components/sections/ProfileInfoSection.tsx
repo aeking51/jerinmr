@@ -356,58 +356,46 @@ ${interestsList}
     }
   }, [submitted, contactName, contactEmail, message]);
 
-  const aboutExperienceOutput = sectionsMap['section_about_experience']?.value ?? combinedOutput;
-  const skillsOutput = sectionsMap['section_skills']?.value;
-  const whoisOutput = sectionsMap['section_whois']?.value ?? WHOIS_OUTPUT;
-
-  const aboutExperienceCmd = sectionsMap['section_about_experience']?.label || 'cat about.txt experience.log';
-  const skillsCmd = sectionsMap['section_skills']?.label || 'ls -la skills/';
-  const whoisCmd = sectionsMap['section_whois']?.label || 'whois jerinmr';
-
-  // Any extra editable sections added by admin beyond the 3 known keys
-  const extraSections = (sectionItems ?? []).filter(
-    (it) => !['section_about_experience', 'section_skills', 'section_whois'].includes(it.key)
-  );
+  // Build the ordered list of profile sections from DB (display_order respected by hook)
+  const orderedSections = useMemo(() => {
+    const items = sectionItems ?? [];
+    if (items.length === 0) {
+      return [
+        { key: 'section_about_experience', label: 'cat about.txt experience.log', value: combinedOutput },
+        { key: 'section_skills', label: 'ls -la skills/', value: '' },
+        { key: 'section_whois', label: 'whois jerinmr', value: WHOIS_OUTPUT },
+      ];
+    }
+    return items.map((it) => {
+      let value = it.value;
+      if (it.key === 'section_about_experience' && !value) value = combinedOutput;
+      if (it.key === 'section_whois' && !value) value = WHOIS_OUTPUT;
+      return { key: it.key, label: it.label, value };
+    });
+  }, [sectionItems, combinedOutput]);
 
   return (
     <div className="space-y-8">
-      {/* About + Experience */}
-      <div className="space-y-4">
-        <TerminalPrompt
-          command={aboutExperienceCmd}
-          output={aboutExperienceOutput}
-          showCursor={false}
-        />
-      </div>
-
-      {/* Skills */}
-      <div className="space-y-4">
-        {skillsOutput ? (
-          <TerminalPrompt command={skillsCmd} output={skillsOutput} showCursor={false} />
-        ) : (
-          <div className="space-y-2">
-            <div className="text-primary font-mono text-sm">user@portfolio:~$ {skillsCmd}</div>
-            <div className="bg-terminal-bg p-2 sm:p-4 rounded-lg font-mono text-xs sm:text-sm overflow-x-auto">
-              <SkillsTree />
+      {orderedSections.map((sec) => {
+        if (sec.key === 'section_skills' && !sec.value) {
+          return (
+            <div key={sec.key} className="space-y-2">
+              <div className="text-primary font-mono text-sm">user@portfolio:~$ {sec.label || 'ls -la skills/'}</div>
+              <div className="bg-terminal-bg p-2 sm:p-4 rounded-lg font-mono text-xs sm:text-sm overflow-x-auto">
+                <SkillsTree />
+              </div>
             </div>
+          );
+        }
+        return (
+          <div key={sec.key} className="space-y-4">
+            <TerminalPrompt command={sec.label || sec.key} output={sec.value} showCursor={false} />
           </div>
-        )}
-      </div>
+        );
+      })}
 
-      {/* Extra admin-added sections */}
-      {extraSections.map((it) => (
-        <div key={it.key} className="space-y-4">
-          <TerminalPrompt command={it.label || it.key} output={it.value} showCursor={false} />
-        </div>
-      ))}
-
-      {/* Whois / Contact */}
+      {/* Contact form (always last) */}
       <div className="space-y-6">
-        <TerminalPrompt
-          command={whoisCmd}
-          output={whoisOutput}
-          showCursor={false}
-        />
 
         <div className="border border-terminal-green p-3 sm:p-4 bg-card/50">
           <div className="font-mono text-terminal-green mb-4 text-xs sm:text-sm break-all">
