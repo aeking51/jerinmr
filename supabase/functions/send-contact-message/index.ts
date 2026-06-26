@@ -70,15 +70,12 @@ Deno.serve(async (req) => {
             to: ["contact@jerinmr.com"],
             reply_to: email.trim(),
             subject: `New message from ${name.trim()} via jerinmr.myabouts`,
-            html: `
-              <h2>New Contact Form Message</h2>
-              <p><strong>Name:</strong> ${name.trim()}</p>
-              <p><strong>Email:</strong> ${email.trim()}</p>
-              <p><strong>Message:</strong></p>
-              <p>${message.trim().replace(/\n/g, "<br>")}</p>
-              <hr>
-              <p style="color: #888; font-size: 12px;">Sent from jerinmr.myabouts contact form</p>
-            `,
+            template: "contact-form-temp",
+            template_variables: {
+              name: name.trim(),
+              email: email.trim(),
+              message: message.trim(),
+            },
           }),
         });
 
