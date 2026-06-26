@@ -6,7 +6,7 @@ export function AboutSection() {
   const { contentMap: about } = useSiteContentMap('about');
 
   const name = profile['profile_name'] || 'Jerin M R';
-  const role = profile['profile_role'] || 'Entry-Level IT Professional';
+  const role = profile['profile_role'] || 'L1 IT Professional';
   const focus = profile['profile_focus'] || 'Networking, Server Administration, Cloud Infrastructure & Cybersecurity';
   const philosophy = about['profile_philosophy'] || '';
   const hobbies = about['profile_hobbies'] || '';

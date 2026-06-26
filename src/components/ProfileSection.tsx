@@ -8,7 +8,7 @@ export const ProfileSection = memo(function ProfileSection() {
   const { contentMap, isLoading } = useSiteContentMap('profile');
 
   const name = contentMap['profile_name'] || 'Jerin M R';
-  const role = contentMap['profile_role'] || 'Entry-Level IT Professional';
+  const role = contentMap['profile_role'] || 'L1 IT Professional';
   const focus = contentMap['profile_focus'] || 'Networking & Server Administration';
   const location = contentMap['profile_location'] || 'Thrissur, Kerala';
   const email = contentMap['profile_email'] || 'jerinmr@hotmail.com';
