@@ -68,13 +68,15 @@ Deno.serve(async (req) => {
           body: JSON.stringify({
             from: Deno.env.get("RESEND_FROM_EMAIL") || "Jerin Contact <no-reply@jerinmr.com>",
             to: ["contact@jerinmr.com"],
-            reply_to: email.trim(),
+            replyTo: email.trim(),
             subject: `New message from ${name.trim()} via jerinmr.myabouts`,
-            template: "contact-form-temp",
-            template_variables: {
-              name: name.trim(),
-              email: email.trim(),
-              message: message.trim(),
+            template: {
+              id: "contact-form-temp",
+              variables: {
+                name: name.trim(),
+                email: email.trim(),
+                message: message.trim(),
+              },
             },
           }),
         });
