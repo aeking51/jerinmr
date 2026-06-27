@@ -21,7 +21,7 @@ const WHOIS_OUTPUT = `
 
 Registry Information:
 ├── Contact Details
-│   ├── Email     : jerinmr@hotmail.com
+│   ├── Email     : contact@jerinmr.com
 │   ├── Phone     : +91 8848158987
 │   ├── Location  : Thrissur, Kerala, India
 │   └── Timezone  : IST (UTC+5:30)
