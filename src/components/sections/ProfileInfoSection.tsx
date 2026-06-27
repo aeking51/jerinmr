@@ -305,7 +305,7 @@ export const ProfileInfoSection = memo(function ProfileInfoSection() {
 
 Education:
 ├── Advanced Diploma in Networking (Sep 2024 - May 2025)
-│   ├── Institution: Synenfo Solutions, Ernakulam
+│   ├── Institution: Synnefo Solutions, Ernakulam
 │   ├── Coursework: CompTIA A+, CCNA, RHCE, AWS
 │   └── Focus: Enterprise networking and cloud technologies
 │
