@@ -72,7 +72,7 @@ Key Responsibilities:
 ▸ Hardware & Peripherals Support
   ├── Desktop/laptop setup and configuration
   ├── POS system deployment and maintenance
-  ├── Printer network integration and troubleshooting
+  ├── Printer network installation and troubleshooting
   └── Hardware inventory management and asset tracking
 
 Learning Outcomes:
