@@ -21,7 +21,7 @@ const WHOIS_OUTPUT = `
 
 Registry Information:
 ├── Contact Details
-│   ├── Email     : jerinmr@hotmail.com
+│   ├── Email     : contact@jerinmr.com
 │   ├── Phone     : +91 8848158987
 │   ├── Location  : Thrissur, Kerala, India
 │   └── Timezone  : IST (UTC+5:30)
@@ -72,7 +72,7 @@ Key Responsibilities:
 ▸ Hardware & Peripherals Support
   ├── Desktop/laptop setup and configuration
   ├── POS system deployment and maintenance
-  ├── Printer network integration and troubleshooting
+  ├── Printer network installation and troubleshooting
   └── Hardware inventory management and asset tracking
 
 Learning Outcomes:
@@ -87,7 +87,7 @@ Learning Outcomes:
 │                                                                   │
 └───────────────────────────────────────────────────────────────────┘
 
-[2024-09-01 TO 2025-05-31] SYNENFO SOLUTIONS - Advanced Diploma
+[2024-09-01 TO 2025-05-31] SYNNEFO SOLUTIONS - Advanced Diploma
 Program: Networking & Infrastructure Specialization
 Location: Ernakulam, Kerala
 
@@ -249,7 +249,7 @@ const SkillsTree = memo(function SkillsTree() {
 const ContactQuickLinks = memo(function ContactQuickLinks() {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
-      <a href="mailto:jerinmr@hotmail.com" className="flex items-center justify-center gap-1 sm:gap-2 p-2 sm:p-3 border border-terminal-cyan rounded bg-card/30 hover:bg-terminal-cyan hover:text-background transition-colors">
+      <a href="mailto:contact@jerinmr.com" className="flex items-center justify-center gap-1 sm:gap-2 p-2 sm:p-3 border border-terminal-cyan rounded bg-card/30 hover:bg-terminal-cyan hover:text-background transition-colors">
         <Mail className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
         <span className="font-mono text-xs sm:text-sm">Email</span>
       </a>
@@ -305,7 +305,7 @@ export const ProfileInfoSection = memo(function ProfileInfoSection() {
 
 Education:
 ├── Advanced Diploma in Networking (Sep 2024 - May 2025)
-│   ├── Institution: Synenfo Solutions, Ernakulam
+│   ├── Institution: Synnefo Solutions, Ernakulam
 │   ├── Coursework: CompTIA A+, CCNA, RHCE, AWS
 │   └── Focus: Enterprise networking and cloud technologies
 │

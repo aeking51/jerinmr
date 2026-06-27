@@ -28,7 +28,7 @@ Key Responsibilities:
 ▸ Hardware & Peripherals Support
   ├── Desktop/laptop setup and configuration
   ├── POS system deployment and maintenance
-  ├── Printer network integration and troubleshooting
+  ├── Printer network installation and troubleshooting
   └── Hardware inventory management and asset tracking
 
 Learning Outcomes:
@@ -43,7 +43,7 @@ Learning Outcomes:
 │                                                                   │
 └───────────────────────────────────────────────────────────────────┘
 
-[2024-09-01 TO 2025-05-31] SYNENFO SOLUTIONS - Advanced Diploma
+[2024-09-01 TO 2025-05-31] SYNNEFO SOLUTIONS - Advanced Diploma
 Program: Networking & Infrastructure Specialization
 Location: Ernakulam, Kerala
 
