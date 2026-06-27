@@ -249,7 +249,7 @@ const SkillsTree = memo(function SkillsTree() {
 const ContactQuickLinks = memo(function ContactQuickLinks() {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
-      <a href="mailto:jerinmr@hotmail.com" className="flex items-center justify-center gap-1 sm:gap-2 p-2 sm:p-3 border border-terminal-cyan rounded bg-card/30 hover:bg-terminal-cyan hover:text-background transition-colors">
+      <a href="mailto:contact@jerinmr.com" className="flex items-center justify-center gap-1 sm:gap-2 p-2 sm:p-3 border border-terminal-cyan rounded bg-card/30 hover:bg-terminal-cyan hover:text-background transition-colors">
         <Mail className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
         <span className="font-mono text-xs sm:text-sm">Email</span>
       </a>
