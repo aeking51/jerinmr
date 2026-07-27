@@ -58,10 +58,12 @@ export const ProfileSection = memo(function ProfileSection() {
           </div>
 
           <div className="lg:w-48 lg:border-l lg:border-terminal-gray/30 lg:pl-4">
+            <h2 className="sr-only">Quick Links</h2>
             <QuickLinksColumn />
           </div>
         </div>
-        
+
+        <h2 className="sr-only">Latest News</h2>
         <NewsRibbon />
       </div>
     </section>
