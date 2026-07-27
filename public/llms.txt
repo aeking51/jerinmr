@@ -1,0 +1,25 @@
+# Jerin M R — IT Professional Portfolio
+
+> Terminal-styled portfolio of Jerin M R, an L1 IT Professional in Thrissur, Kerala, India, focused on networking, server administration, cloud infrastructure and cybersecurity.
+
+The site is an interactive terminal interface. Visitors run commands such as
+`cd ~`, `cat profile/*`, `ls articles/` and `nano message.txt` to browse the
+profile, read technical articles and send a message.
+
+## Pages
+
+- [Home](/): Interactive terminal portfolio — profile, skills, experience, quick links and latest articles.
+- [Articles](/article/): Technical write-ups on networking, Linux, servers, cloud and IT security.
+
+## About
+
+- Name: Jerin M R
+- Role: L1 IT Professional
+- Focus: Networking, Server Administration, Cloud Infrastructure, Cybersecurity
+- Location: Thrissur, Kerala, India
+- Contact: contact@jerinmr.com
+- LinkedIn: https://linkedin.com/in/jerinmr51
+
+## Optional
+
+- [Sitemap](/sitemap.xml): Machine-readable list of indexable pages.
