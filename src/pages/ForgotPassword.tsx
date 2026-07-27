@@ -57,8 +57,8 @@ const ForgotPassword = () => {
                 <Mail className="h-6 w-6 text-primary" />
               </div>
             </div>
-            <CardTitle className="text-2xl text-center">
-              Check your email
+            <CardTitle asChild className="text-2xl text-center">
+              <h1>Check your email</h1>
             </CardTitle>
             <CardDescription className="text-center">
               We've sent a password reset link to {email}
@@ -88,8 +88,8 @@ const ForgotPassword = () => {
               <Mail className="h-6 w-6 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-2xl text-center">
-            Forgot Password
+          <CardTitle asChild className="text-2xl text-center">
+            <h1>Forgot Your Password?</h1>
           </CardTitle>
           <CardDescription className="text-center">
             Enter your email address and we'll send you a reset link
