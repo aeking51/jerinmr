@@ -9,6 +9,17 @@ const NotFound = () => {
       "404 Error: User attempted to access non-existent route:",
       location.pathname
     );
+    document.title = "404 — Page Not Found | Jerin M R";
+    let robots = document.head.querySelector<HTMLMetaElement>('meta[name="robots"]');
+    if (!robots) {
+      robots = document.createElement("meta");
+      robots.setAttribute("name", "robots");
+      document.head.appendChild(robots);
+    }
+    robots.setAttribute("content", "noindex, nofollow");
+    return () => {
+      robots?.setAttribute("content", "index, follow");
+    };
   }, [location.pathname]);
 
   return (

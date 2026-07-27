@@ -66,11 +66,40 @@ export default function Article() {
       
       // Standard meta description
       setMetaTag('description', description, true);
+
+      // Article structured data
+      let ld = document.getElementById('article-jsonld');
+      if (!ld) {
+        ld = document.createElement('script');
+        ld.setAttribute('type', 'application/ld+json');
+        ld.id = 'article-jsonld';
+        document.head.appendChild(ld);
+      }
+      ld.textContent = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: article.title,
+        description,
+        datePublished: article.created_at,
+        dateModified: article.created_at,
+        mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+        author: {
+          '@type': 'Person',
+          name: 'Jerin M R',
+          url: 'https://www.jerinmr.com',
+        },
+        publisher: {
+          '@type': 'Person',
+          name: 'Jerin M R',
+          url: 'https://www.jerinmr.com',
+        },
+      });
     }
 
     return () => {
       // Reset title on unmount
       document.title = 'JerinMR';
+      document.getElementById('article-jsonld')?.remove();
     };
   }, [article]);
 
