@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -57,9 +57,9 @@ const ForgotPassword = () => {
                 <Mail className="h-6 w-6 text-primary" />
               </div>
             </div>
-            <CardTitle asChild className="text-2xl text-center">
-              <h1>Check your email</h1>
-            </CardTitle>
+            <h1 className="text-2xl font-semibold leading-none tracking-tight text-center">
+Check your email
+            </h1>
             <CardDescription className="text-center">
               We've sent a password reset link to {email}
             </CardDescription>
@@ -88,9 +88,9 @@ const ForgotPassword = () => {
               <Mail className="h-6 w-6 text-primary" />
             </div>
           </div>
-          <CardTitle asChild className="text-2xl text-center">
-            <h1>Forgot Your Password?</h1>
-          </CardTitle>
+          <h1 className="text-2xl font-semibold leading-none tracking-tight text-center">
+Forgot Your Password?
+          </h1>
           <CardDescription className="text-center">
             Enter your email address and we'll send you a reset link
           </CardDescription>

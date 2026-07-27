@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -87,9 +87,9 @@ const ResetPassword = () => {
               <Lock className="h-6 w-6 text-primary" />
             </div>
           </div>
-          <CardTitle asChild className="text-2xl text-center">
-            <h1>Reset Your Password</h1>
-          </CardTitle>
+          <h1 className="text-2xl font-semibold leading-none tracking-tight text-center">
+Reset Your Password
+          </h1>
           <CardDescription className="text-center">
             Enter your new password below
           </CardDescription>
