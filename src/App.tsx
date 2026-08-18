@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import RouteMeta from "@/components/RouteMeta";
+import { ShutdownGate } from "@/components/ShutdownGate";
 
 // Lazy load all pages for code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -45,24 +46,26 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <RouteMeta />
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/article/*" element={<Article />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/visitors" element={<AdminVisitors />} />
-            <Route path="/admin/articles" element={<AdminArticles />} />
-            <Route path="/admin/site-info" element={<AdminSiteInfo />} />
-            <Route path="/admin/quick-links" element={<AdminQuickLinks />} />
-            <Route path="/admin/short-links" element={<AdminShortLinks />} />
-            <Route path="/sl/:slug" element={<ShortLinkRedirect />} />
-            <Route path="/admin/profile" element={<AdminProfile />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+        <ShutdownGate>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/article/*" element={<Article />} />
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin/visitors" element={<AdminVisitors />} />
+              <Route path="/admin/articles" element={<AdminArticles />} />
+              <Route path="/admin/site-info" element={<AdminSiteInfo />} />
+              <Route path="/admin/quick-links" element={<AdminQuickLinks />} />
+              <Route path="/admin/short-links" element={<AdminShortLinks />} />
+              <Route path="/sl/:slug" element={<ShortLinkRedirect />} />
+              <Route path="/admin/profile" element={<AdminProfile />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </ShutdownGate>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
