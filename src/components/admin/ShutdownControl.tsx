@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Power, Save, Loader2 } from 'lucide-react';
+import { Power, Save, Loader2, RotateCcw } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSiteShutdown } from '@/hooks/useSiteShutdown';
 
@@ -57,6 +57,12 @@ export function ShutdownControl() {
     persist({ enabled: checked, title, message });
   };
 
+  const handleTurnOnline = () => {
+    if (!window.confirm('Turn the website back on for all visitors?')) return;
+    setEnabled(false);
+    persist({ enabled: false, title, message });
+  };
+
   return (
     <Card className={enabled ? 'border-destructive/60' : 'border-terminal-green/30'}>
       <CardHeader>
@@ -86,6 +92,17 @@ export function ShutdownControl() {
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
+        {enabled && (
+          <Button
+            onClick={handleTurnOnline}
+            disabled={saving}
+            variant="default"
+            className="w-full gap-2 bg-terminal-green text-terminal-bg hover:bg-terminal-green/90"
+          >
+            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <RotateCcw className="h-4 w-4" />}
+            Turn website back ONLINE
+          </Button>
+        )}
         <div className="space-y-1.5">
           <Label htmlFor="shutdown-title">Shutdown screen title</Label>
           <Input
