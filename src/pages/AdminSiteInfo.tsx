@@ -27,6 +27,7 @@ import {
   Monitor,
   ExternalLink
 } from 'lucide-react';
+import { ShutdownControl } from '@/components/admin/ShutdownControl';
 
 const AdminSiteInfo = () => {
   const navigate = useNavigate();
@@ -321,6 +322,9 @@ const AdminSiteInfo = () => {
             </Button>
           </div>
         </div>
+
+        {/* Website Shutdown */}
+        <ShutdownControl />
 
         {/* Overview Card */}
         <Card className="border-terminal-green/30">
