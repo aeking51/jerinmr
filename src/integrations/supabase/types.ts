@@ -132,6 +132,7 @@ export type Database = {
         Row: {
           click_count: number
           created_at: string
+          has_password: boolean | null
           id: string
           is_active: boolean
           password: string | null
@@ -142,6 +143,7 @@ export type Database = {
         Insert: {
           click_count?: number
           created_at?: string
+          has_password?: boolean | null
           id?: string
           is_active?: boolean
           password?: string | null
@@ -152,6 +154,7 @@ export type Database = {
         Update: {
           click_count?: number
           created_at?: string
+          has_password?: boolean | null
           id?: string
           is_active?: boolean
           password?: string | null

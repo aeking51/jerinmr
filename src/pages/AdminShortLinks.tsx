@@ -15,7 +15,7 @@ interface ShortLink {
   target_url: string;
   click_count: number;
   is_active: boolean;
-  password: string | null;
+  has_password: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -35,6 +35,7 @@ const AdminShortLinks = () => {
     is_active: true,
     password: ''
   });
+  const [removePassword, setRemovePassword] = useState(false);
 
   useEffect(() => {
     checkAuthAndRole();
@@ -68,7 +69,7 @@ const AdminShortLinks = () => {
     try {
       const { data, error } = await supabase
         .from('short_links')
-        .select('*')
+        .select('id, slug, target_url, click_count, is_active, has_password, created_at, updated_at')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -93,7 +94,16 @@ const AdminShortLinks = () => {
       if (editingLink) {
         const { error } = await supabase
           .from('short_links')
-          .update({ slug: formData.slug, target_url: formData.target_url, is_active: formData.is_active, password: formData.password || null })
+          .update({
+            slug: formData.slug,
+            target_url: formData.target_url,
+            is_active: formData.is_active,
+            ...(removePassword
+              ? { password: null }
+              : formData.password
+                ? { password: formData.password }
+                : {}),
+          })
           .eq('id', editingLink.id);
         if (error) throw error;
         toast({ title: "Short link updated successfully" });
@@ -145,13 +155,15 @@ const AdminShortLinks = () => {
 
   const openEditDialog = (link: ShortLink) => {
     setEditingLink(link);
-    setFormData({ slug: link.slug, target_url: link.target_url, is_active: link.is_active, password: link.password || '' });
+    setFormData({ slug: link.slug, target_url: link.target_url, is_active: link.is_active, password: '' });
+    setRemovePassword(false);
     setIsDialogOpen(true);
   };
 
   const resetForm = () => {
     setEditingLink(null);
     setFormData({ slug: '', target_url: '', is_active: true, password: '' });
+    setRemovePassword(false);
   };
 
   const handleLogout = async () => {
@@ -250,8 +262,21 @@ const AdminShortLinks = () => {
                         type="text"
                         value={formData.password}
                         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                        placeholder="Leave empty for no password"
+                        placeholder={editingLink ? 'Leave empty to keep current password' : 'Leave empty for no password'}
+                        disabled={removePassword}
                       />
+                      {editingLink?.has_password && (
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            id="remove_password"
+                            checked={removePassword}
+                            onChange={(e) => { setRemovePassword(e.target.checked); if (e.target.checked) setFormData({ ...formData, password: '' }); }}
+                            className="h-4 w-4"
+                          />
+                          <Label htmlFor="remove_password" className="cursor-pointer">Remove password protection</Label>
+                        </div>
+                      )}
                     </div>
                     <div className="flex items-center gap-2">
                       <input
@@ -285,7 +310,7 @@ const AdminShortLinks = () => {
                       <span className="text-xs text-muted-foreground flex items-center gap-1">
                         <MousePointerClick className="h-3 w-3" />{link.click_count} clicks
                       </span>
-                      {link.password && (
+                      {link.has_password && (
                         <span className="text-xs text-muted-foreground flex items-center gap-1">
                           <Lock className="h-3 w-3" /> Protected
                         </span>
