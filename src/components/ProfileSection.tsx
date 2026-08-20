@@ -25,7 +25,10 @@ export const ProfileSection = memo(function ProfileSection() {
           <div className="flex-1 space-y-4">
             <div className="space-y-2">
               <div className="font-mono">
-                <h1 className="text-terminal-green text-lg sm:text-xl font-bold">{name}</h1>
+                <h1 className="text-terminal-green text-lg sm:text-xl font-bold">
+                  {name}
+                  <span className="sr-only"> — {role}, IT infrastructure &amp; networking portfolio</span>
+                </h1>
                 <p className="text-terminal-cyan text-base sm:text-lg">{role}</p>
                 <p className="text-terminal-gray text-sm sm:text-base">{focus}</p>
               </div>
