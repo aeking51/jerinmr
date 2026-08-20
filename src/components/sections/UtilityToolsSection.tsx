@@ -447,7 +447,7 @@ export const UtilityToolsSection = memo(function UtilityToolsSection() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold mb-2 text-terminal-green">$ utility_tools</h2>
+        <h1 className="text-2xl font-bold mb-2 text-terminal-green">$ utility_tools</h1>
         <p className="text-terminal-gray">Developer utilities and converters</p>
       </div>
 
