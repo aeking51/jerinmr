@@ -103,7 +103,7 @@ export const NetworkToolsSection = memo(function NetworkToolsSection() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold mb-2 text-terminal-green">$ network_tools</h2>
+        <h1 className="text-2xl font-bold mb-2 text-terminal-green">$ network_tools</h1>
         <p className="text-terminal-gray">Network diagnostics and utilities</p>
       </div>
 
